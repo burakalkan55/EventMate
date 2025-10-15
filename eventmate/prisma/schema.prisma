@@ -7,23 +7,24 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 model User {
   id               String      @id @default(cuid())
   name             String
   email            String      @unique
+  password         String?
   image            String?
   bio              String?
   interests        String[]
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
 
-  // İlişkiler
   hostedEvents     Event[]     @relation("UserHostedEvents")
   joinedEvents     Event[]     @relation("UserEvents")
   sentMessages     Message[]   @relation("SentMessages")
   receivedMessages Message[]   @relation("ReceivedMessages")
 }
+
+
 
 model Event {
   id          String    @id @default(cuid())

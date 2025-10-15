@@ -19,7 +19,7 @@ export default function Navbar() {
         </div>
 
         <button className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg font-semibold">
-          Join Now
+          <Link href="/register" className="hover:text-pink-400 transition">Join Now</Link>
         </button>
       </div>
     </nav>
