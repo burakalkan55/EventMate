@@ -1,0 +1,52 @@
+// Prisma schema for EventMate
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String      @id @default(cuid())
+  name             String
+  email            String      @unique
+  image            String?
+  bio              String?
+  interests        String[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  // İlişkiler
+  hostedEvents     Event[]     @relation("UserHostedEvents")
+  joinedEvents     Event[]     @relation("UserEvents")
+  sentMessages     Message[]   @relation("SentMessages")
+  receivedMessages Message[]   @relation("ReceivedMessages")
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  date        DateTime
+  location    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Event -> User ilişkileri
+  hostId      String
+  host        User      @relation("UserHostedEvents", fields: [hostId], references: [id])
+  attendees   User[]    @relation("UserEvents")
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String
+  content    String
+  createdAt  DateTime @default(now())
+
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+}
